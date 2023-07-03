@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Transforms;
 using UnityEngine;
+
 public partial struct CubeManagerSystem : ISystem
 {
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<CubeTag>();
+        state.RequireForUpdate<CubeData>();
     }
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
@@ -26,10 +26,18 @@ public partial struct CubeManagerSystem : ISystem
         // job.Schedule();
 
         //foreach complexity O(n) with IAspect
-        foreach (var (cubeIAspect,cubeTag) in SystemAPI.Query<CubeIAspect,CubeTag>())
+        foreach (var cubeIAspect in SystemAPI.Query<CubeIAspect>())
         {
             cubeIAspect.Rotate(deltaTime);
         }
+
+        //use command buffer to add component, if no CubeTag, add it
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
+        foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
+        {
+            ecb.AddComponent(entity, new CubeTag { tag = true });
+        }
+        ecb.Playback(state.EntityManager);
     }
 }
 [BurstCompile]

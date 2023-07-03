@@ -13,5 +13,5 @@ public class CubeTagAuthoring : MonoBehaviour
 }
 public struct CubeTag: IComponentData
 {
-    public float speed;
+    public bool tag;
 }
