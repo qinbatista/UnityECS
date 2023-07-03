@@ -31,11 +31,12 @@ public partial struct CubeManagerSystem : ISystem
             cubeIAspect.Rotate(deltaTime);
         }
 
-        //use command buffer to add component, if no CubeTag, add it
+        //use command buffer to add component, if no CubeTag, add it, add class type data
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
         {
             ecb.AddComponent(entity, new CubeTag { tag = true });
+            ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
         }
         ecb.Playback(state.EntityManager);
     }
@@ -47,5 +48,14 @@ partial struct CubeJob : IJobEntity
     void Execute(ref LocalTransform transform, ref CubeData cubeData, ref CubeTag tag)
     {
         transform = transform.RotateY(cubeData.speed * deltaTime);
+    }
+}
+public class ClassCubeData : IComponentData
+{
+    public GameObject RotatorPrefab;
+
+    // Every IComponentData class must have a no-arg constructor.
+    public ClassCubeData()
+    {
     }
 }

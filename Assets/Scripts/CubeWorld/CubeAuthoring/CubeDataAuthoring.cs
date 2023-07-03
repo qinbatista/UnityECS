@@ -13,7 +13,7 @@ public class CubeDataAuthoring : MonoBehaviour
         }
     }
 }
-public struct CubeData: IComponentData
+public struct CubeData : IComponentData
 {
     public float speed;
 }
