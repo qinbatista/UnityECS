@@ -1,5 +1,4 @@
 using Unity.Entities;
-using UnityEngine;
 using Unity.Transforms;
 readonly partial struct CubeIAspect: IAspect
 {
