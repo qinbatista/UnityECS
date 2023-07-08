@@ -33,7 +33,7 @@ public partial struct CubeRespawnSystem : ISystem
         //run once when code start
         state.Enabled = false;
         var prefab = SystemAPI.GetSingleton<CubeRespawn>().prefab;
-        var instance = state.EntityManager.Instantiate(prefab, 500, Allocator.Temp);
+        var instance = state.EntityManager.Instantiate(prefab, 500000, Allocator.Temp);
         var random = Unity.Mathematics.Random.CreateFromIndex(updateCounter++);
         foreach (var entity in instance)
         {

@@ -22,23 +22,23 @@ public partial struct CubeManagerSystem : ISystem
         // }
 
         // job complexity O(logN)
-        var job = new CubeJob { deltaTime = deltaTime };
-        job.ScheduleParallel();
+        // var job = new CubeJob { deltaTime = deltaTime };
+        // job.ScheduleParallel();
 
         //foreach complexity O(n) with IAspect
-        // foreach (var cubeIAspect in SystemAPI.Query<CubeIAspect>())
-        // {
-        //     cubeIAspect.Rotate(deltaTime);
-        // }
+        foreach (var cubeIAspect in SystemAPI.Query<CubeIAspect>())
+        {
+            cubeIAspect.Rotate(deltaTime);
+        }
 
         //use command buffer to add component, if no CubeTag, add it, add class type data
-        var ecb = new EntityCommandBuffer(Allocator.Temp);
-        foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
-        {
-            ecb.AddComponent(entity, new CubeTag { tag = true });
-            ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
-        }
-        ecb.Playback(state.EntityManager);
+        // var ecb = new EntityCommandBuffer(Allocator.Temp);
+        // foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
+        // {
+        //     ecb.AddComponent(entity, new CubeTag { tag = true });
+        //     ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
+        // }
+        // ecb.Playback(state.EntityManager);
     }
 }
 [BurstCompile]
