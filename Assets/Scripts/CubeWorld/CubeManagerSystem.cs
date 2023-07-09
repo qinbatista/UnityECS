@@ -25,7 +25,7 @@ public partial struct CubeManagerSystem : ISystem
             ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
         }
         //!disable Entity with CubeTag and tag is false
-        foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithEntityAccess())
+        foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithNone<Disabled>().WithEntityAccess())
         {
             if (!cubeTag.ValueRO.tag)
                 ecb.AddComponent<Disabled>(entity);
