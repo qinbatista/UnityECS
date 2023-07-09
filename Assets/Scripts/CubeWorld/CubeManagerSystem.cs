@@ -12,7 +12,6 @@ public partial struct CubeManagerSystem : ISystem
         state.RequireForUpdate<CubeData>();
     }
 
-
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
