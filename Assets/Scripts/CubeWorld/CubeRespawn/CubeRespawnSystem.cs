@@ -38,7 +38,7 @@ public partial struct CubeRespawnSystem : ISystem
         foreach (var entity in instance)
         {
             var transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
-            transform.ValueRW.Position = random.NextFloat3(new float3(-100, 0, -100), new float3(100, 0, 100));
+            transform.ValueRW.Position = random.NextFloat3(new float3(-100, -100, -100), new float3(100, 100, 100));
         }
     }
 }

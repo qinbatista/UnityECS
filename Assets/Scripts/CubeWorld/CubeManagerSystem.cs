@@ -22,14 +22,14 @@ public partial struct CubeManagerSystem : ISystem
         // }
 
         // job complexity O(logN)
-        // var job = new CubeJob { deltaTime = deltaTime };
-        // job.ScheduleParallel();
+        var job = new CubeJob { deltaTime = deltaTime };
+        job.Schedule();
 
         //foreach complexity O(n) with IAspect
-        foreach (var cubeIAspect in SystemAPI.Query<CubeIAspect>())
-        {
-            cubeIAspect.Rotate(deltaTime);
-        }
+        // foreach (var cubeIAspect in SystemAPI.Query<CubeIAspect>())
+        // {
+        //     cubeIAspect.Rotate(deltaTime);
+        // }
 
         //use command buffer to add component, if no CubeTag, add it, add class type data
         // var ecb = new EntityCommandBuffer(Allocator.Temp);
