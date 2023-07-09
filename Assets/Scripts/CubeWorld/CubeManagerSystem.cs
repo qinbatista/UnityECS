@@ -21,20 +21,23 @@ public partial struct CubeManagerSystem : ISystem
         foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
         {
             ecb.AddComponent(entity, new CubeTag { tag = true });
-            ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
+            // ecb.AddComponent(entity, new ClassCubeData()); //this is not working, because it is not in the same world as state.EntityManager
         }
         //!disable Entity with CubeTag and tag is false
-        foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithNone<Disabled>().WithEntityAccess())
+        int index = 0;
+        foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithEntityAccess().WithOptions(EntityQueryOptions.IncludeDisabledEntities))
         {
             if (!cubeTag.ValueRO.tag)
                 ecb.AddComponent<Disabled>(entity);
-        }
-        //!Enable Entity with disabled component
-        foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithAll<Disabled>().WithEntityAccess())
-        {
-            if (cubeTag.ValueRO.tag)
+            else
                 ecb.RemoveComponent<Disabled>(entity);
         }
+        //!Enable Entity with disabled component
+        // foreach (var (cubeTag, entity) in SystemAPI.Query<RefRO<CubeTag>>().WithAll<Disabled>().WithEntityAccess())
+        // {
+        //     if (cubeTag.ValueRO.tag)
+        //         ecb.RemoveComponent<Disabled>(entity);
+        // }
         ecb.Playback(state.EntityManager);
 
         //**foreach complexity O(n)
@@ -45,7 +48,7 @@ public partial struct CubeManagerSystem : ISystem
 
         //**job complexity O(logN)
         var job = new CubeJob { deltaTime = deltaTime };
-        job.ScheduleParallel();
+        state.Dependency = job.ScheduleParallel(state.Dependency);
 
         // **foreach complexity O(n) with IAspect
         // foreach (var (cubeIAspect,entity) in SystemAPI.Query<CubeIAspect>().WithEntityAccess())
@@ -59,11 +62,13 @@ public partial struct CubeManagerSystem : ISystem
 
     }
 }
+//** specific which component to use
+[WithAll(typeof(CubeTag))]
 [BurstCompile]
 partial struct CubeJob : IJobEntity
 {
     public float deltaTime;
-    void Execute(ref LocalTransform transform, ref CubeData cubeData, ref CubeTag tag)
+    void Execute(ref LocalTransform transform, ref CubeData cubeData)
     {
         transform = transform.RotateY(cubeData.speed * deltaTime);
     }

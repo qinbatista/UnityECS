@@ -40,7 +40,7 @@ public partial struct CubeRespawnSystem : ISystem
         //**instance new cubes with specific number
         var prefab = SystemAPI.GetSingleton<CubeRespawn>().prefab;
         var random = Unity.Mathematics.Random.CreateFromIndex(updateCounter++);
-        var instance = state.EntityManager.Instantiate(prefab, 100, Allocator.Temp);
+        var instance = state.EntityManager.Instantiate(prefab, 10, Allocator.Temp);
         foreach (var entity in instance)
         {
             var transform = SystemAPI.GetComponentRW<LocalTransform>(entity);
