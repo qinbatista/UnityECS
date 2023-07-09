@@ -38,7 +38,6 @@ public partial struct CubeManagerSystem : ISystem
         }
         ecb.Playback(state.EntityManager);
 
-
         //**foreach complexity O(n)
         // foreach (var (transform, cubeData) in SystemAPI.Query<RefRW<LocalTransform>, RefRO<CubeData>>())
         // {
