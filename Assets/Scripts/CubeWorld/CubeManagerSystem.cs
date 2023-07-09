@@ -16,7 +16,6 @@ public partial struct CubeManagerSystem : ISystem
     {
         float deltaTime = SystemAPI.Time.DeltaTime;
 
-
         //**use command buffer to add component, if no CubeTag, add it, add class type data
         var ecb = new EntityCommandBuffer(Allocator.Temp);
         foreach (var (transform, entity) in SystemAPI.Query<RefRO<LocalTransform>>().WithNone<CubeTag>().WithEntityAccess())
